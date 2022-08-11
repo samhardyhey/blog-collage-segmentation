@@ -1,0 +1,8 @@
+flickrapi==2.4.0
+pandas==1.4.3
+tqdm==4.64.0
+opencv-python==4.6.0.66
+
+ipyplot==1.1.1
+matplotlib==3.5.2
+scikit-image==0.19.3

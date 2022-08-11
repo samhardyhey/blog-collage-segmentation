@@ -1,0 +1,6 @@
+biodiversity_library/
+temp_output/
+.vscode/
+*.venv/
+__pycache__/
+.ipynb_checkpoints
