@@ -1,4 +1,4 @@
-biodiversity_library/
+segmentation_models/
 temp_output/
 .vscode/
 *.venv/
