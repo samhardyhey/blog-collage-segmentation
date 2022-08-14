@@ -9,8 +9,6 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
-tqdm.pandas()
-
 flickr_retrieval_logger = logging.getLogger("flickr_retrieval")
 flickr_retrieval_logger.setLevel(logging.INFO)
 
@@ -80,7 +78,6 @@ def download_image_record(record, download_dir):
         (download_dir / record.album_id).mkdir(parents=True, exist_ok=True)
 
     save_path = f"{(download_dir / record.album_id / record.id).as_posix()}{Path(record.download_url).suffix}"
-    print(save_path)
     if Path(save_path).exists() == True:
         flickr_retrieval_logger.info(f"Previously saved: {save_path}; skipping")
     else:
@@ -93,36 +90,43 @@ def download_image_record(record, download_dir):
 
 
 if __name__ == "__main__":
+    MIN_RESOLUTION = 1000
+    N_IMAGES_PER_ALBUM = 30
+    DOWNLOAD_DIR = Path("./output/bdhl_flickr_downloads/")
+
     # 1. authenticate
-    flickr_api_key = os.getenv("FLICKR_API_KEY")
-    flickr_api_secret = os.environ.get("FLICKR_API_SECRET")
+    FLICKR_API_KEY = os.getenv("FLICKR_API_KEY")
+    FLICKR_API_SECRET = os.environ.get("FLICKR_API_SECRET")
 
     flickr = flickrapi.FlickrAPI(
-        flickr_api_key, flickr_api_secret, format="etree"
+        FLICKR_API_KEY, FLICKR_API_SECRET, format="etree"
     )  # json format also available
     with contextlib.suppress(Exception):
         flickr.authenticate_console()  # 401 error anyway? but still works?
+    flickr_retrieval_logger.info("Successfully authenticated to flickr API")
 
     # 2. manually curate some biodiversity albums
-    curated_albums = [
+    CURATED_BDHL_ALBUMS = [
         "https://www.flickr.com/photos/biodivlibrary/albums/72157719480387299",
         "https://www.flickr.com/photos/biodivlibrary/albums/72157719533382815",
         "https://www.flickr.com/photos/biodivlibrary/albums/72157719491069662",
         "https://www.flickr.com/photos/biodivlibrary/albums/72157719531520295",
         "https://www.flickr.com/photos/biodivlibrary/albums/72157719464598717",
         "https://www.flickr.com/photos/biodivlibrary/albums/72157719464733002",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719474188271",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719449546679",
     ]
-    curated_albums = [Path(e).name for e in curated_albums]
+    curated_bdhl_albums = [Path(e).name for e in CURATED_BDHL_ALBUMS]
 
     # walk the albums, retrieve individual image details
-    all_images = [retrieve_image_meta_data(album) for album in curated_albums]
+    all_images = [
+        retrieve_image_meta_data(album, N_IMAGES_PER_ALBUM, MIN_RESOLUTION)
+        for album in curated_bdhl_albums
+    ]
     all_images = pd.concat(all_images)
 
     # download each image
-    download_dir = Path("./output/bdhl_flickr_downloads")
-    shutil.rmtree(str(download_dir)) if download_dir.exists() else None
-    download_dir.mkdir()
-
-    bio_diversity_all = all_images.progress_apply(
-        lambda y: download_image_record(y, download_dir), axis=1
-    )
+    shutil.rmtree(str(DOWNLOAD_DIR)) if DOWNLOAD_DIR.exists() else None
+    DOWNLOAD_DIR.mkdir()
+    for idx, image in tqdm(list(all_images.iterrows()), desc=f"Downloading images"):
+        download_image_record(image, DOWNLOAD_DIR)

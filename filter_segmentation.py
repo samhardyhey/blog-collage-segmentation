@@ -1,13 +1,10 @@
-import logging
 import shutil
 from pathlib import Path
 
 import cv2
 import numpy as np
 from skimage.filters import threshold_mean
-
-filter_segmentation_logger = logging.getLogger("flickr_retrieval")
-filter_segmentation_logger.setLevel(logging.INFO)
+from tqdm import tqdm
 
 
 def get_threshold_mask(image):
@@ -43,18 +40,18 @@ def remove_background(masked_image):
 
 
 if __name__ == "__main__":
+    DOWNLOAD_DIR = Path("./output/bdhl_flickr_downloads/")
+    FILTER_DIR = Path("./output/filter_segmentation")
+
     # load images, creat output dir
-    all_images = list(
-        Path("./output/bdhl_flickr_downloads/72157719533382815/").rglob("*.jpg")
-    )
-    save_dir = Path("./output/filter_segmentation")
-    shutil.rmtree(str(save_dir)) if save_dir.exists() else None
-    save_dir.mkdir()
+    all_images = list(DOWNLOAD_DIR.rglob("*.jpg"))
+    shutil.rmtree(str(FILTER_DIR)) if FILTER_DIR.exists() else None
+    FILTER_DIR.mkdir()
 
     # apply threshold filtering
-    for image_file in all_images:
+    for image_file in tqdm(all_images, desc="Segmenting images"):
         image = cv2.imread(str(image_file))
         mask = get_threshold_mask(image)
         masked = apply_mask(image, mask)
         bg_removed = remove_background(masked)
-        cv2.imwrite(str(save_dir / f"{image_file.name}_mask.png"), bg_removed)
+        cv2.imwrite(str(FILTER_DIR / f"{image_file.name}_mask.png"), bg_removed)
