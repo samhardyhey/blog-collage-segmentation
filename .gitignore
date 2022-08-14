@@ -1,5 +1,4 @@
-segmentation_models/
-temp_output/
+output/
 .vscode/
 *.venv/
 __pycache__/
