@@ -7,6 +7,5 @@ ipyplot==1.1.1
 matplotlib==3.5.2
 scikit-image==0.19.3
 
-# mask rcnn segmentation
-opencv-python==4.6.0.66
-pycocotools==2.0.4
+transformers==4.21.1
+clean-py==0.5

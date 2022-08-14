@@ -14,6 +14,6 @@ conda install pytorch torchvision -c pytorch -y
 echo "Testing torch installation"
 python -c 'import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())'
 
-# echo "Installing low-level audio libraries"
-# apt-get update -y
-# apt install ffmpeg -y
+echo "Add git config"
+git config --global user.name "Sam Hardy"
+git config --global user.email "samhardyhey@gmail.com"
