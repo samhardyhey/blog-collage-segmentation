@@ -1,5 +1,5 @@
 ## Collage segmentation
-Notebooks and scripts for the semi-automated segmentation of collage materials. See the accompanying blog post here.
+Notebooks and scripts for the semi-automated segmentation of collage materials. See the accompanying blog post [here](https://www.samhardyhey.com/collagey-segmenty).
 
 ## Install
 - Conda env creation, python dependencies, via `create_env.sh`
