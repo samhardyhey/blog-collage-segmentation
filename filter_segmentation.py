@@ -23,20 +23,15 @@ def apply_mask(image, mask):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 
-    # apply
-    masked = cv2.bitwise_and(image, image, mask=mask)
-
-    return masked
+    return cv2.bitwise_and(image, image, mask=mask)
 
 
 def remove_background(masked_image):
-    # save with transparent background
     tmp = cv2.cvtColor(masked_image, cv2.COLOR_BGR2GRAY)
     _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
     b, g, r = cv2.split(masked_image)
     rgba = [b, g, r, alpha]
-    masked_tr = cv2.merge(rgba, 4)
-    return masked_tr
+    return cv2.merge(rgba, 4)
 
 
 if __name__ == "__main__":
@@ -54,4 +49,4 @@ if __name__ == "__main__":
         mask = get_threshold_mask(image)
         masked = apply_mask(image, mask)
         bg_removed = remove_background(masked)
-        cv2.imwrite(str(FILTER_DIR / f"{image_file.name}_mask.png"), bg_removed)
+        cv2.imwrite(str(FILTER_DIR / f"{image_file.stem}.png"), bg_removed)

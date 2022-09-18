@@ -98,23 +98,24 @@ if __name__ == "__main__":
     FLICKR_API_KEY = os.getenv("FLICKR_API_KEY")
     FLICKR_API_SECRET = os.environ.get("FLICKR_API_SECRET")
 
-    flickr = flickrapi.FlickrAPI(
-        FLICKR_API_KEY, FLICKR_API_SECRET, format="etree"
-    )  # json format also available
+    # json format also available
+    flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET, format="etree")
     with contextlib.suppress(Exception):
         flickr.authenticate_console()  # 401 error anyway? but still works?
     flickr_retrieval_logger.info("Successfully authenticated to flickr API")
 
     # 2. manually curate some biodiversity albums
     CURATED_BDHL_ALBUMS = [
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719480387299",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719533382815",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719491069662",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719531520295",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719464598717",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719464733002",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719474188271",
-        "https://www.flickr.com/photos/biodivlibrary/albums/72157719449546679",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719441825715",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719388569819",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719436056985",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719344590884",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719355459807",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719347463287",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719167039103",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719094689375",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719092377820",
+        "https://www.flickr.com/photos/biodivlibrary/albums/72157719004471241",
     ]
     curated_bdhl_albums = [Path(e).name for e in CURATED_BDHL_ALBUMS]
 
@@ -128,5 +129,5 @@ if __name__ == "__main__":
     # download each image
     shutil.rmtree(str(DOWNLOAD_DIR)) if DOWNLOAD_DIR.exists() else None
     DOWNLOAD_DIR.mkdir()
-    for idx, image in tqdm(list(all_images.iterrows()), desc=f"Downloading images"):
+    for idx, image in tqdm(list(all_images.iterrows()), desc="Downloading images"):
         download_image_record(image, DOWNLOAD_DIR)
