@@ -1,10 +1,35 @@
-## Collage segmentation
-Notebooks and scripts for the semi-automated segmentation of collage materials. See the accompanying blog post [here](https://www.samhardyhey.com/collagey-segmenty).
+# Collage Segmentation 🎨
 
-## Install
-- Conda env creation, python dependencies, via `create_env.sh`
+Semi-automated tools for extracting vintage biological illustrations from the Biodiversity Heritage Library. Companion code for ["Collagey Segmenty"](https://www.samhardyhey.com/collagey-segmenty).
+
+## Features
+- 🖼️ Automated Flickr image retrieval
+- ✂️ Filter-based image segmentation
+- 🎯 Background removal
+- 🔄 Batch processing
+
+## Setup
+```bash
+# Install dependencies
+./create_env.sh
+```
 
 ## Usage
-- Apply for flickr API usage [here](https://www.flickr.com/services/apps/create/apply/), ensure that env variables `FLICKR_API_KEY` and `FLICKR_API_SECRET` are configured appropriately
-- Retrieve a sample of images from a collection of reference flickr album URLS via `python flickr_retrieval.py`
-- Auto-crop the downloaded images with filter-based thresholding via `python filter_segmentation.py`
+```bash
+# Configure Flickr API credentials
+export FLICKR_API_KEY="your-key"
+export FLICKR_API_SECRET="your-secret"
+
+# Download images
+python flickr_retrieval.py
+
+# Process images
+python filter_segmentation.py
+```
+
+## Structure
+- 📓 `flickr_retrieval.py` # Image collection
+- ✂️ `filter_segmentation.py` # Auto-cropping
+- ⚙️ `create_env.sh` # Environment setup
+
+*Note: Requires Flickr API access. Apply [here](https://www.flickr.com/services/apps/create/apply/).*
